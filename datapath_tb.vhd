@@ -10,15 +10,14 @@ end datapath_tb;
 
 architecture sim of datapath_tb is
 
-    constant N : integer := 8;
+    constant N : integer := 12;
     constant M : integer := 3;
-    constant N_ALU : integer := 12;
 
     constant clk_hz : integer := 100e6;
     constant clk_period : time := 1 sec / clk_hz;
 
-    signal offset : std_logic_vector(N_ALU-1 downto 0);
-    signal bypass_A, bypass_B : std_logic;
+    signal offset : std_logic_vector(11 downto 0);
+    signal bypassA, bypassB : std_logic;
     signal reset, ie, oe, en, write, readA, readB : std_logic;
     signal clk :std_logic := '1';
     signal Z_Flag, O_Flag, N_Flag, clk_out : std_logic;
@@ -34,15 +33,14 @@ begin
     DUT : entity work.datapath(behave)
     generic map(
         N => N,
-        M => M,
-        N_ALU => N_ALU
+        M => M
     )
     port map (
         clk => clk,
         reset => reset,
         offset => offset,
-        bypass_A => bypass_A,
-        bypass_B => bypass_B,
+        bypassA => bypassA,
+        bypassB => bypassB,
         ie => ie,
         en => en,
         oe => oe,
@@ -62,13 +60,28 @@ begin
 
     SEQUENCER_PROC : process
     begin
+        oe <= '1';
+        en <= '1';
         reset <= '1';
         wait until rising_edge(clk);
         reset <= '0';
-        bypass_B <= '1';
+        WAddr <= (others => '1');
+        write <= '1';
+        ie <= '1';
+        input <= "000000000010";
+        wait until rising_edge(clk);
+        WAddr <= (others => '0');
+        write <= '0';
+        ie <= '0';
+        wait until rising_edge(clk);
+        bypassB <= '1';
+        bypassA <= '0';
         Op <= "000";
         offset <= "000000000010";
-        wait for clk_period * 10;
+        wait until rising_edge(clk);
+        wait until rising_edge(clk);
+        wait for 2 ns;
+        assert output = "000000000100" report "It failed!" severity failure;
 
         finish;
     end process;
