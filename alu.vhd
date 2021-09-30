@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
 --use ieee.numeric_std_unsigned.all;
 
 entity alu is
@@ -37,7 +38,7 @@ begin
             when "100" => Sum <= A XOR B;
             when "101" => Sum <= NOT A;
             when "110" => Sum <= A;
-            when "111" => Sum <= (others => '0');        
+            when "111" => Sum <= A + 1;
             when others => Sum <= (others => '0');
         end case;
     end process;
