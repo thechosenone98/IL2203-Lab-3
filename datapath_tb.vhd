@@ -60,6 +60,8 @@ begin
 
     SEQUENCER_PROC : process
     begin
+
+        --BRANCH INSTRUCTION START
         oe <= '1';
         en <= '1';
         reset <= '1';
@@ -82,6 +84,17 @@ begin
         wait until rising_edge(clk);
         wait for 2 ns;
         assert output = "000000000100" report "It failed!" severity failure;
+        --BRANCH INSTRUCTION END
+
+        --LDI INSTRUCTION START
+        bypassB <= '0';
+        bypassA <= '1';
+        Op <= "110";
+        offset <= "000000000011";
+        wait until rising_edge(clk);
+        wait for 2 ns;
+        assert output = "000000000011" report "It failed!" severity failure;
+        --LDI INSTRUCTION END
 
         finish;
     end process;
