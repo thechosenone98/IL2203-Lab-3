@@ -94,6 +94,11 @@ begin
         wait until rising_edge(clk);
         wait for 2 ns;
         assert output = "000000000011" report "It failed!" severity failure;
+        write <= '1';
+        WAddr <= "000";
+        ie <= '0';
+        wait until rising_edge(clk);
+        wait for 2 ns;
         --LDI INSTRUCTION END
 
         finish;

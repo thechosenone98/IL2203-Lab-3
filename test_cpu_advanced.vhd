@@ -87,8 +87,9 @@ begin
 					address=>address,
 					Dout=>Dout,
 					RW=>RW);
-   					rden<=RW;
-   					wren<=not(RW);
+					
+   	rden<=RW;
+   	wren<=not(RW);
 
 	test_all_instructions: process
 		procedure test_ST(signal instr:OUT instruction;  wr_reg,rd_reg:integer) is
