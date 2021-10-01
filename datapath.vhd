@@ -19,14 +19,13 @@ port(
 end datapath;
 
 architecture behave of datapath is
-constant ALU_WIDTH : integer := 12;
 signal sum_tmp, A_QA, B_QB,mux : std_logic_vector(N-1 downto 0) := (others => '0');
 signal muxA_output, muxB_output : std_logic_vector(N-1 downto 0);
 signal ra_mux : std_logic_vector(M-1 downto 0);
 signal readA_activator : std_logic;
 --signal Z_Flag_tmp, O_Flag_tmp, N_Flag_tmp : std_logic;
 begin
-    RF: entity work.register_file(behave)
+    REGISTER_FILE: entity work.register_file(behave)
     generic map(
         N => N,
         M => M
@@ -47,7 +46,7 @@ begin
 
     ALU_clocked: entity work.alu_clocked(structural)
     generic map(
-        N => ALU_WIDTH
+        N => N
     )
     port map (
         A  => muxA_output,
