@@ -44,7 +44,7 @@ begin
         write => write
         );
 
-    ALU_clocked: entity work.alu_clocked(structural)
+    ALU: entity work.alu(behave)
     generic map(
         N => N
     )
@@ -52,10 +52,8 @@ begin
         A  => muxA_output,
         B  => muxB_output,
         Op => Op,
-        clk => clk,
-        rst => reset,
         en => en,
-        res => sum_tmp,
+        Sum => sum_tmp,
         Z_Flag => Z_Flag,
         N_Flag => N_Flag,
         O_Flag => O_Flag
