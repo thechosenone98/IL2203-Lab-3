@@ -12,7 +12,8 @@ entity alu is
         A, B : in std_logic_vector(N-1 downto 0);
         Op : in std_logic_vector(2 downto 0);
         Sum : buffer std_logic_vector(N-1 downto 0);
-        Z_Flag, N_Flag, O_Flag, en : out std_logic
+        Z_Flag, N_Flag, O_Flag : out std_logic;
+        en : in std_logic
     );
 end alu;
 

@@ -52,6 +52,7 @@ begin
         readA => readA,
         readB => readB,
         Z_Flag => Z_Flag,
+        N_Flag => N_Flag,
         O_Flag => O_Flag,
         clk_out => clk_out,
         Op => Op,
@@ -67,96 +68,128 @@ begin
         if(reset = '1') then
             upc <= "00";
             address <= (others => '0');
+            RW <= '1';
         elsif rising_edge(clk) then
+            RW <= '1';
             case upc is
                 when "00" =>
                     instr_reg <= Din;
                     case Din(15 downto 12) is
                         when I_ADD =>
-                            --DISABLE WRITE
-                            write <= '0';
-                            --ENABLE ALU
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- ENABLE ALU
                             en_alu <= '1';
-                            --ENABLE READ_A and READ_B
+                            -- ENABLE READ_A AND READ_B
                             readA <= '1';
                             readB <= '1';
-                            --RA REGISTER
+                            -- SET RA REGISTER
                             ra <= Din(8 downto 6);
-                            --RB REGISTER
+                            -- SET RB REGISTER
                             rb <= Din(5 downto 3);
-                            --OP CODE
+                            --SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
+                            -- SET OP CODE
                             Op <= "000";
-                            --DISABLE BYPASSES
+                            --INPUT ENABLE
+                            ie <= '0';
+                            -- DISABLE BYPASSES
                             bypassA <= '0';
                             bypassB <= '0';
                         when I_SUB =>
-                            --DISABLE WRITE
-                            write <= '0';
-                            --ENABLE ALU
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- ENABLE ALU
                             en_alu <= '1';
-                            --ENABLE READ_A and READ_B
+                            -- ENABLE READ_A AND READ_B
                             readA <= '1';
                             readB <= '1';
-                            --RA REGISTER
+                            -- SET RA REGISTER
                             ra <= Din(8 downto 6);
-                            --RB REGISTER
+                            -- SET RB REGISTER
                             rb <= Din(5 downto 3);
-                            --OP CODE
+                            --SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
+                            -- SET OP CODE
                             Op <= "001";
-                            --DISABLE BYPASSES
+                            --INPUT ENABLE
+                            ie <= '0';
+                            -- DISABLE BYPASSES
                             bypassA <= '0';
                             bypassB <= '0';
                         when I_AND =>
-                            --DISABLE WRITE
-                            write <= '0';
-                            --ENABLE ALU
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- ENABLE ALU
                             en_alu <= '1';
-                            --ENABLE READ_A and READ_B
+                            -- ENABLE READ_A AND READ_B
                             readA <= '1';
                             readB <= '1';
-                            --RA REGISTER
+                            -- SET RA REGISTER
                             ra <= Din(8 downto 6);
-                            --RB REGISTER
+                            -- SET RB REGISTER
                             rb <= Din(5 downto 3);
-                            --OP CODE
+                            --SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
+                            -- SET OP CODE
                             Op <= "010";
+                            --INPUT ENABLE
+                            ie <= '0';
+                            -- DISABLE BYPASSES
+                            bypassA <= '0';
+                            bypassB <= '0';
                         when I_OR =>
-                            --DISABLE WRITE
-                            write <= '0';
-                            --ENABLE ALU
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- ENABLE ALU
                             en_alu <= '1';
-                            --ENABLE READ_A and READ_B
+                            -- ENABLE READ_A AND READ_B
                             readA <= '1';
                             readB <= '1';
-                            --RA REGISTER
+                            -- SET RA REGISTER
                             ra <= Din(8 downto 6);
-                            --RB REGISTER
+                            -- SET RB REGISTER
                             rb <= Din(5 downto 3);
-                            --OP CODE
+                            --SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
+                            -- SET OP CODE
                             Op <= "011";
+                            --INPUT ENABLE
+                            ie <= '0';
+                            -- DISABLE BYPASSES
+                            bypassA <= '0';
+                            bypassB <= '0';
                         when I_XOR =>
-                            --DISABLE WRITE
-                            write <= '0';
-                            --ENABLE ALU
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- ENABLE ALU
                             en_alu <= '1';
-                            --ENABLE READ_A and READ_B
+                            -- ENABLE READ_A AND READ_B
                             readA <= '1';
                             readB <= '1';
-                            --RA REGISTER
+                            -- SET RA REGISTER
                             ra <= Din(8 downto 6);
-                            --RB REGISTER
+                            -- SET RB REGISTER
                             rb <= Din(5 downto 3);
-                            --OP CODE
+                            --SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
+                            -- SET OP CODE
                             Op <= "100";
+                            --INPUT ENABLE
+                            ie <= '0';
+                            -- DISABLE BYPASSES
+                            bypassA <= '0';
+                            bypassB <= '0';
                         when I_NOT =>
-                            --DISABLE WRITE
-                            write <= '0';
+                            -- ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
                             --ENABLE ALU
                             en_alu <= '1';
                             --ENABLE READ_A and DISABLE READ_B
                             readA <= '1';
                             readB <= '0';
-                            
                             --RA REGISTER
                             ra <= Din(8 downto 6);
                             --OP CODE
@@ -182,6 +215,22 @@ begin
                             readA <= '0';
                             readB <= '0';
                         when I_LD =>
+                            --DISABLE WRITE
+                            write <= '0';
+                            --ENABLE ALU
+                            en_alu <= '1';
+                            --ENABLE THE OUTPUT
+                            oe <= '1';
+                            --ENABLE READ_A and DISABLE READ_B
+                            readA <= '1';
+                            readB <= '0';
+                            --RA REGISTER
+                            ra <= Din(8 downto 6);
+                            --OP CODE
+                            Op <= "110";
+                            --DISABLE BYPASSES
+                            bypassA <= '0';
+                            bypassB <= '0';
                         when I_ST =>
                             --DISABLE WRITE
                             write <= '0';
@@ -199,11 +248,11 @@ begin
                             --DISABLE BYPASSES
                             bypassA <= '0';
                             bypassB <= '0';
-                            --SET R/W SIGNAL TO READ
-                            RW <= '1';
                         when I_LDI =>
-                            --DISABLE WRITE
-                            write <= '0';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
                             --ENABLE ALU
                             en_alu <= '1';
                             --DISABLE READ_A and READ_B
@@ -211,6 +260,8 @@ begin
                             readB <= '0';
                             --OP CODE
                             Op <= "110";
+                            --INPUT ENABLE
+                            ie <= '0';
                             --ENABLE BYPASS_A and DISABLE BYPASS_B
                             bypassA <= '1';
                             bypassB <= '0';
@@ -225,25 +276,82 @@ begin
                             readA <= '0';
                             readB <= '0';
                         when I_BRZ =>
-                            --DISABLE WRITE
-                            write <= '0';
                             --ENABLE ALU
                             en_alu <= '1';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                            if (Z_Flag_Latched = '1') then
+                                -- ENABLE BYPASS_B AND DISABLE BYPASS_A
+                                bypassA <= '0';
+                                bypassB <= '1';
+                                -- SET OP CODE
+                                Op <= "000";
+                                --SET OFFSET
+                                offset <= std_logic_vector(resize(signed(Din(11 downto 0)), offset'length));
+                            else
+                                -- INCREMENT PC
+                                bypassB <= '1';
+                                bypassA <= '0';
+                                Op <= "111";
+                            end if;
                         when I_BRN =>
-                            --DISABLE WRITE
-                            write <= '0';
                             --ENABLE ALU
                             en_alu <= '1';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                            if (N_Flag_Latched = '1') then
+                                -- ENABLE BYPASS_B AND DISABLE BYPASS_A
+                                bypassA <= '0';
+                                bypassB <= '1';
+                                -- SET OP CODE
+                                Op <= "000";
+                                --SET OFFSET
+                                offset <= std_logic_vector(resize(signed(Din(11 downto 0)), offset'length));
+                            else
+                                -- INCREMENT PC
+                                bypassB <= '1';
+                                bypassA <= '0';
+                                Op <= "111";
+                            end if;
                         when I_BRO =>
-                            --DISABLE WRITE
-                            write <= '0';
                             --ENABLE ALU
                             en_alu <= '1';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                            if (O_Flag_Latched = '1') then
+                                -- ENABLE BYPASS_B AND DISABLE BYPASS_A
+                                bypassA <= '0';
+                                bypassB <= '1';
+                                -- SET OP CODE
+                                Op <= "000";
+                                --SET OFFSET
+                                offset <= std_logic_vector(resize(signed(Din(11 downto 0)), offset'length));
+                            else
+                                -- INCREMENT PC
+                                bypassB <= '1';
+                                bypassA <= '0';
+                                Op <= "111";
+                            end if;
                         when I_BRA =>
-                            --DISABLE WRITE
-                            write <= '0';
                             --ENABLE ALU
                             en_alu <= '1';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                            -- ENABLE BYPASS_B AND DISABLE BYPASS_A
+                            bypassA <= '0';
+                            bypassB <= '1';
+                            -- SET OP CODE
+                            Op <= "000";
+                            --SET OFFSET
+                            offset <= std_logic_vector(resize(signed(Din(11 downto 0)), offset'length));
                         when others =>
                             --DISABLE EVERYTHING
                             readA <= '0';
@@ -257,53 +365,110 @@ begin
                 when "01" =>
                     case instr_reg(15 downto 12) is
                         when I_ADD =>
-                            --LATCH FLAGS (WRONG, PUT AT NEXT STEP)
+                            --LATCH FLAGS
                             Z_Flag_Latched <= Z_Flag;
                             N_Flag_Latched <= N_Flag;
                             O_Flag_Latched <= O_Flag;
-                            --ENABLE WRITE
-                            write <= '1';
-                            --SET WRITE ADDRESS
-                            WAddr <= instr_reg(11 downto 9);
-                            --INPUT ENABLE
-                            ie <= '0';
                             --INCREMENT PC
                             bypassB <= '1';
                             bypassA <= '0';
                             Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
                         when I_SUB =>
-                            --LATCH FLAGS (WRONG, PUT AT NEXT STEP)
+                            -- LATCH FLAGS
                             Z_Flag_Latched <= Z_Flag;
                             N_Flag_Latched <= N_Flag;
                             O_Flag_Latched <= O_Flag;
-                            --ENABLE WRITE
-                            write <= '1';
-                            --SET WRITE ADDRESS
-                            WAddr <= instr_reg(11 downto 9);
-                            --INPUT ENABLE
-                            ie <= '0';
+                            -- INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_AND =>
+                            -- LATCH FLAGS
+                            Z_Flag_Latched <= Z_Flag;
+                            N_Flag_Latched <= N_Flag;
+                            O_Flag_Latched <= O_Flag;
+                            -- INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_OR =>
+                            --LATCH FLAGS
+                            Z_Flag_Latched <= Z_Flag;
+                            N_Flag_Latched <= N_Flag;
+                            O_Flag_Latched <= O_Flag;
                             --INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_XOR =>
+                            --LATCH FLAGS
+                            Z_Flag_Latched <= Z_Flag;
+                            N_Flag_Latched <= N_Flag;
+                            O_Flag_Latched <= O_Flag;
+                            --INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_NOT =>
+                            -- LATCH FLAGS
+                            Z_Flag_Latched <= Z_Flag;
+                            N_Flag_Latched <= N_Flag;
+                            O_Flag_Latched <= O_Flag;
+                            -- INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_LD =>
+                            -- ADDRESS = R2
+                            address <= output_alu;
+                            -- INCREMENT PC
+                            WAddr <= R7;
+                            write <= '1';
+                            ie <= '0';
                             bypassB <= '1';
                             bypassA <= '0';
                             Op <= "111";
                         when I_ST =>
                             -- WRITE R2 TO DOUT
                             Dout <= output_alu;
-                            --RA REGISTER
-                            ra <= instr_reg(8 downto 6);
-                        when I_LDI =>
-                            --ENABLE WRITE
+                            -- INCREMENT PC
+                            WAddr <= R7;
                             write <= '1';
-                            --SET WRITE ADDRESS
-                            WAddr <= instr_reg(11 downto 9);
-                            --INPUT ENABLE
                             ie <= '0';
-                            --INCREMENT PC
                             bypassB <= '1';
                             bypassA <= '0';
                             Op <= "111";
-
-
+                        when I_LDI =>
+                            -- INCREMENT PC
+                            WAddr <= R7;
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                        when I_BRZ | I_BRN | I_BRO | I_BRA =>
+                            -- SET ADDRESS REGISTER TO NEW PC
+                            address <= output_alu;
+                            --DISABLE EVERYTHING
+                            readA <= '0';
+                            readB <= '0';
+                            en_alu <= '0';
+                            write <= '0';
+                            WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
+                            ie <= '0';
+                            oe <= '0';
                         when others =>
                             --DISABLE EVERYTHING
                             readA <= '0';
@@ -311,57 +476,99 @@ begin
                             en_alu <= '0';
                             write <= '0';
                             WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
                             ie <= '0';
                             oe <= '0';
                     end case;
                 when "10" =>
                     case instr_reg(15 downto 12) is
-                        when I_ADD =>
-                            --SET WRITE ADRESS TO PC REGISTER
-                            WAddr <= R7;
-                        when I_SUB =>
-                            --SET WRITE ADRESS TO PC REGISTER
-                            WAddr <= R7;
-                        when I_LDI =>
-                            --SET WRITE ADRESS TO PC REGISTER
-                            WAddr <= R7;
-                        when I_ST =>
-                            --ADDRESS = R1
+                        when I_ADD | I_SUB | I_AND | I_OR | I_XOR | I_NOT | I_LDI =>
+                            -- SET ADDRESS REGISTER TO NEW PC
                             address <= output_alu;
-                            --SET R/W SIGNAL TO WRITE
-                            RW <= '0';
-                            --INCREMENT PC
-                            bypassB <= '1';
-                            bypassA <= '0';
-                            Op <= "111";
-
-                        when others =>
-                            --DISABLE EVERYTHING
+                            -- DISABLE EVERYTHING (NOP)
                             readA <= '0';
                             readB <= '0';
                             en_alu <= '0';
                             write <= '0';
                             WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
                             ie <= '0';
                             oe <= '0';
+                            ra <= Rx;
+                            rb <= Rx;
+                        when I_LD =>
+                            ie <= '1';
+                            WAddr <= instr_reg(11 downto 9);
+                            -- DISABLE EVERYTHING (NOP)
+                            readA <= '0';
+                            readB <= '0';
+                            en_alu <= '0';
+                            bypassA <= '0';
+                            bypassB <= '0';
+                            oe <= '0';
+                            ra <= Rx;
+                            rb <= Rx;
+                        when I_ST =>
+                            -- DISABLE WRITE
+                            write <= '0';
+                            -- RA REGISTER
+                            ra <= instr_reg(8 downto 6);
+                            -- SET OP CODE
+                            Op <= "110";
+                            -- DISABLE BYPASSES
+                            bypassA <= '0';
+                            bypassB <= '0';
+                        when others =>
+                            -- DISABLE EVERYTHING (NOP)
+                            readA <= '0';
+                            readB <= '0';
+                            en_alu <= '0';
+                            write <= '0';
+                            WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
+                            ie <= '0';
+                            oe <= '0';
+                            ra <= Rx;
+                            rb <= Rx;
                     end case;
                 when "11" =>
                     case instr_reg(15 downto 12) is
                         when I_ST =>
-                            --INPUT ENABLE
-                            ie <= '0';
-                            --ENABLE WRITE (SAVE PC+1)
-                            write <= '1';
-                            --SET WRITE ADDRESS
-                            WAddr <= R7;
-                            --SET ADDRESS TO PC+1
+                            RW <= '0';
+                            --ADDRESS = R1
                             address <= output_alu;
+                            --DISABLE EVERYTHING (NOP)
+                            readA <= '0';
+                            readB <= '0';
+                            en_alu <= '0';
+                            write <= '0';
+                            WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
+                            ie <= '0';
+                            oe <= '0';
+                            ra <= Rx;
+                            rb <= Rx;
                         when others =>
+                            --DISABLE EVERYTHING (NOP)
+                            readA <= '0';
+                            readB <= '0';
+                            en_alu <= '0';
+                            write <= '0';
+                            WAddr <= Rx;
+                            bypassA <= '0';
+                            bypassB <= '0';
+                            ie <= '0';
+                            oe <= '0';
+                            ra <= Rx;
+                            rb <= Rx;
                     end case;
-                        upc <= "00";
+                    upc <= "00";
                 when others =>
-                        upc <= "00";
-
+                    upc <= "00";
             end case;
             upc <= upc + 1;
         end if;
