@@ -1,11 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.numeric_std_unsigned.all;
+use ieee.std_logic_unsigned.all;
 use work.micro_assembly_code.all;
 
 entity cpu is
-    generic(N,M:integer);
+    generic(N : integer := 16;
+            M : integer := 3);
     port (
         clk : in std_logic;
         reset : in std_logic;
