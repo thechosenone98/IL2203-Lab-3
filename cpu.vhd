@@ -196,8 +196,10 @@ begin
                             --OP CODE
                             Op <= "101";
                         when I_MOV =>
-                            --DISABLE WRITE
-                            write <= '0';
+                            --ENABLE WRITE
+                            write <= '1';
+                            -- SET WRITE ADDRESS
+                            WAddr <= Din(11 downto 9);
                             --ENABLE ALU
                             en_alu <= '1';
                             --ENABLE READ_A and DISABLE READ_B
@@ -421,6 +423,17 @@ begin
                             -- SET WRITE ADDRESS TO PC REGISTER
                             WAddr <= R7;
                         when I_NOT =>
+                            -- LATCH FLAGS
+                            Z_Flag_Latched <= Z_Flag;
+                            N_Flag_Latched <= N_Flag;
+                            O_Flag_Latched <= O_Flag;
+                            -- INCREMENT PC
+                            bypassB <= '1';
+                            bypassA <= '0';
+                            Op <= "111";
+                            -- SET WRITE ADDRESS TO PC REGISTER
+                            WAddr <= R7;
+                        when I_MOV =>
                             -- LATCH FLAGS
                             Z_Flag_Latched <= Z_Flag;
                             N_Flag_Latched <= N_Flag;
