@@ -5,7 +5,9 @@ library ieee;
 entity one_chip_computer is
     port(
 		  clk, reset : in std_logic;
-        led_output : out std_logic_vector(15 downto 0)
+        led_output : out std_logic_vector(15 downto 0);
+        clk_out : out std_logic;
+        Z_Flag, N_Flag, O_Flag : out std_logic --TESTING
     );
 end entity;
 
@@ -18,9 +20,9 @@ architecture top of one_chip_computer is
     signal ie_activator, oe_activator: std_logic;
     signal clk_divided : std_logic;
 begin
-    clock_divider_inst: entity work.clock_divider
+    clock_divider_inst: entity work.clock_divider(behave)
       generic map (
-        frequency => 25e5
+        frequency => 10e6
       )
       port map (
         clk_in  => clk,
@@ -28,7 +30,7 @@ begin
         clk_out => clk_divided
       );
 
-    cpu_inst: entity work.cpu(behave)
+    cpu_inst: entity work.monster_cpu(behave)
 		generic map(
 			N => N,
 			M => M
@@ -39,7 +41,11 @@ begin
         Din     => Din_tmp,
         address => address_tmp,
         Dout    => Dout_tmp,
-        RW      => RW_tmp
+        RW      => RW_tmp,
+        Z_Flag_test => Z_Flag,
+        N_Flag_test => N_Flag,
+        O_Flag_test => O_Flag,
+        test_alu => led_output
       );
 
     gpio_inst: entity work.gpio(behave)
@@ -51,8 +57,8 @@ begin
         reset => reset,
         ie    => ie_activator,
         oe    => oe_activator,
-        Din   => Dout_tmp,
-        Dout  => led_output
+        Din   => Dout_tmp
+        -- Dout  => led_output
       );
 
     memory_inst: entity work.memory(SYN)
@@ -60,10 +66,12 @@ begin
         address => address_tmp(7 downto 0),
         clock   => clk_divided,
         data    => Dout_tmp,
-        wren    => RW_tmp,
+        wren    => not RW_tmp,
         q       => Din_tmp
       );
 
-    ie_activator <= '1' when (address_tmp = "1111000000000000" and (RW_tmp = '0')) else '0';
+    ie_activator <= '1';-- when (address_tmp = "1111000000000000" and (RW_tmp = '0')) else '0';
     oe_activator <= '1';
+    clk_out <= clk_divided;
+    -- led_output <= address_tmp;
 end architecture;
