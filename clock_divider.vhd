@@ -20,7 +20,7 @@ architecture behave of clock_divider is
     begin
         process(clk_in, rst)
         begin
-            if (rst = '0') then --switch to 1 for testbench
+            if (rst = '1') then --switch to 1 for testbench
                 clk_prescaled <= '0';
                 count <= 0;
             elsif rising_edge(clk_in) then
