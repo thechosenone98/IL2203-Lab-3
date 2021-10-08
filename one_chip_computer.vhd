@@ -32,7 +32,7 @@ architecture top of one_chip_computer is
 begin
     clock_divider_inst: entity work.clock_divider(behave)
     generic map (
-        frequency => 10e4
+        frequency => 2e4
     )
     port map (
         clk_in  => clk,

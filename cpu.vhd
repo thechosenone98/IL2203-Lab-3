@@ -581,6 +581,8 @@ begin
                         when I_LD =>
                             ie <= '1';
                             WAddr <= instr_reg(11 downto 9);
+                            write <= '1';
+                            address <= output_alu;
                             -- DISABLE EVERYTHING EXCEPT WRITE TO REGISTER
                             readA <= '0';
                             readB <= '0';
