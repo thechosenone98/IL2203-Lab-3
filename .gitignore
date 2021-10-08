@@ -53,3 +53,5 @@ dkms.conf
 
 # Custom folder
 work/
+Synthesis/
+FPGA_Synthesis/

@@ -21,7 +21,7 @@ end monster_cpu;
 architecture behave of monster_cpu is
 
     signal instr_reg: std_logic_vector(15 downto 0) := (others => '0');
-    signal upc : std_logic_vector(1 downto 0);
+    signal upc : std_logic_vector(2 downto 0);
     
     --Datapath signals
     signal ie, oe : std_logic;
@@ -36,6 +36,7 @@ architecture behave of monster_cpu is
     signal output_alu : std_logic_vector(N-1 downto 0);
     signal clk_out : std_logic;
     signal en_alu : std_logic;
+
 begin
 
     DATAPATH : entity work.datapath(behave)
@@ -76,7 +77,9 @@ begin
     MICROCODE_FSM : process(clk, reset)
     begin
         if(reset = '1') then
-            upc <= "00";
+            -- To create a stall on the first clock cycle of the program to let 
+            -- time for the memory to fetch the first instruction
+            upc <= "100";
             address <= (others => '0');
             Dout <= (others => '0');
             instr_reg <= (others => '0');
@@ -100,8 +103,9 @@ begin
         elsif rising_edge(clk) then
             RW <= '1';
             oe <= '1';
+            upc <= upc + 1;
             case upc is
-                when "00" =>
+                when "000" =>
                     instr_reg <= Din;
                     case Din(15 downto 12) is
                         when I_ADD =>
@@ -412,7 +416,7 @@ begin
                             ra <= Rx;
                             rb <= Rx;
                     end case;
-                when "01" =>
+                when "001" =>
                     case instr_reg(15 downto 12) is
                         when I_ADD =>
                             --LATCH FLAGS
@@ -557,7 +561,7 @@ begin
                             ie <= '0';
                             oe <= '0';
                     end case;
-                when "10" =>
+                when "010" =>
                     case instr_reg(15 downto 12) is
                         when I_ADD | I_SUB | I_AND | I_OR | I_XOR | I_NOT | I_LDI | I_MOV =>
                             -- SET ADDRESS REGISTER TO NEW PC
@@ -589,6 +593,8 @@ begin
                         when I_ST =>
                             -- DISABLE WRITE
                             write <= '0';
+                            -- LATCH PC TO ADDRESS
+                            address <= output_alu;
                             -- RA REGISTER
                             ra <= instr_reg(8 downto 6);
                             -- SET OP CODE
@@ -610,7 +616,7 @@ begin
                             ra <= Rx;
                             rb <= Rx;
                     end case;
-                when "11" =>
+                when "011" =>
                     case instr_reg(15 downto 12) is
                         when I_ST =>
                             RW <= '0';
@@ -642,11 +648,13 @@ begin
                             ra <= Rx;
                             rb <= Rx;
                     end case;
-                    upc <= "00";
+                    upc <= "000";
+                when "100" =>
+                    -- Stall cycle for memory
+                    upc <= "000";
                 when others =>
-                    upc <= "00";
+                    upc <= "000";
             end case;
-            upc <= upc + 1;
         end if;
     end process;
 end architecture;
