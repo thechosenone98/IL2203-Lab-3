@@ -1,0 +1,128 @@
+D:/University/KTH/IL2203/Lab3/alu.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/alu.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity alu
+-- Compiling architecture behave of alu
+
+} {} {}} D:/University/KTH/IL2203/Lab3/micro_assembly_code.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/micro_assembly_code.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling package micro_assembly_code
+
+} {} {}} D:/University/KTH/IL2203/Lab3/test_cpu_advanced.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/test_cpu_advanced.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package micro_assembly_code
+-- Loading package util
+-- Compiling entity cpu_tb
+-- Compiling architecture test_cpu_advanced of cpu_tb
+-- Loading package NUMERIC_STD
+-- Loading entity monster_cpu
+
+} {} {}} D:/University/KTH/IL2203/Lab3/register_file.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/register_file.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity register_file
+-- Compiling architecture behave of register_file
+
+} {} {}} D:/University/KTH/IL2203/Lab3/datapath_tb.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/datapath_tb.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package ENV
+-- Compiling entity datapath_tb
+-- Compiling architecture sim of datapath_tb
+-- Loading entity datapath
+
+} {} {}} D:/University/KTH/IL2203/Lab3/datapath.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/datapath.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity datapath
+-- Compiling architecture behave of datapath
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading entity register_file
+-- Loading entity alu
+
+} {} {}} D:/University/KTH/IL2203/Lab3/register_file_tb.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/register_file_tb.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity register_file_tb
+-- Compiling architecture tb of register_file_tb
+-- Loading entity register_file
+
+} {} {}} {D:/University/KTH/IL2203/Lab3/fake_memory copy.vhd} {1 {vcom -work work -2008 -explicit {D:/University/KTH/IL2203/Lab3/fake_memory copy.vhd}
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package micro_assembly_code
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package std_logic_textio
+-- Loading package NUMERIC_STD
+-- Loading package ENV
+-- Compiling entity fake_memory
+-- Compiling architecture fake_mem_test of fake_memory
+
+} {} {}} D:/University/KTH/IL2203/Lab3/gpio_tb.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/gpio_tb.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package ENV
+-- Compiling entity gpio_tb
+-- Compiling architecture sim of gpio_tb
+-- Loading entity gpio
+
+} {} {}} D:/University/KTH/IL2203/Lab3/fake_memory.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/fake_memory.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package micro_assembly_code
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package std_logic_textio
+-- Loading package NUMERIC_STD
+-- Loading package ENV
+-- Compiling entity fake_memory
+-- Compiling architecture fake of fake_memory
+-- Loading entity cpu
+
+} {} {}} D:/University/KTH/IL2203/Lab3/gpio.vhd {1 {vcom -work work -2008 -explicit D:/University/KTH/IL2203/Lab3/gpio.vhd
+Model Technology ModelSim ALTERA vcom 10.1d Compiler 2012.11 Nov  2 2012
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity gpio
+-- Compiling architecture behave of gpio
+
+} {} {}}

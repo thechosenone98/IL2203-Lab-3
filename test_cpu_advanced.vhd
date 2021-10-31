@@ -11,21 +11,21 @@ entity cpu_tb is
 end cpu_tb;
 
 architecture test_cpu_advanced of cpu_tb is
-  component cpu
-    generic(N:integer;
-            M:integer);
-    port(clk,reset:IN std_logic;
-         Din:IN std_logic_vector(N-1 downto 0);
-         address:OUT std_logic_vector(N-1 downto 0);
-         Dout:OUT std_logic_vector(N-1 downto 0);
-         RW:OUT std_logic);
-  end component;
+--   component cpu
+--     generic(N:integer;
+--             M:integer);
+--     port(clk,reset:IN std_logic;
+--          Din:IN std_logic_vector(N-1 downto 0);
+--          address:OUT std_logic_vector(N-1 downto 0);
+--          Dout:OUT std_logic_vector(N-1 downto 0);
+--          RW:OUT std_logic);
+--   end component;
   constant N:integer:=16;
   constant M:integer:=3;
   signal clk,reset:std_logic:='0';
   signal Din:std_logic_vector(N-1 downto 0);
   signal address:std_logic_vector(N-1 downto 0);
-  signal Dout,mem_Dout:std_logic_vector(N-1 downto 0);
+  signal Dout:std_logic_vector(N-1 downto 0);
   signal RW:std_logic;
   signal rden,wren:std_logic;
   
@@ -80,13 +80,27 @@ begin
 	end process spy_process;
 
 
-   	DUT:cpu generic map(N=>N,M=>M)
-		   port map(clk=>clk,
-					reset=>reset,
-					Din=>Din,
-					address=>address,
-					Dout=>Dout,
-					RW=>RW);
+   	-- DUT:cpu generic map(N=>N,M=>M)
+	-- 	   port map(clk=>clk,
+	-- 				reset=>reset,
+	-- 				Din=>Din,
+	-- 				address=>address,
+	-- 				Dout=>Dout,
+	-- 				RW=>RW);
+
+	DUT: entity work.monster_cpu
+	  generic map (
+		N => N,
+		M => M
+	  )
+	  port map (
+		clk         => clk,
+		reset       => reset,
+		Din         => Din,
+		address     => address,
+		Dout        => Dout,
+		RW          => RW
+	  );
 					
    	rden<=RW;
    	wren<=not(RW);
@@ -216,7 +230,10 @@ begin
 		i(Din,I_BRA,57);
 		assert(t_rf_mem(7)="0000000001000010") report "I_BRA does not work" severity failure;
 		report "I_BRA with positive address works OK";
-		wait on clk until clk='1';
+		--wait on clk until clk='1';
+		i(Din, I_MOV, R2, R0, NU);
+		assert(t_rf_mem(2)=t_rf_mem(0)) report "I_MOV does not work" severity failure;
+		report "I_MOV WORKS";
 		report "CPU passes all tests.";
 		assert(false) report "Ending Simulation." severity failure;
 	end process;

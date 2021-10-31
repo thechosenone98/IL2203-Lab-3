@@ -1,0 +1,5 @@
+set tool_name "ModelSim (VHDL)"
+set corner_file_list {
+	{{"Slow Model"} {one_chip_computer.vho one_chip_computer_vhd.sdo}}
+	{{"Fast Model"} {one_chip_computer_fast.vho one_chip_computer_vhd_fast.sdo}}
+}
