@@ -56,7 +56,7 @@ architecture test_cpu_advanced of cpu_tb is
    end i;
       
 	-- test_signals in Modelsim (i.e., spy_signals)
-	signal t_upc:std_logic_vector(1 downto 0);
+	signal t_upc:std_logic_vector(2 downto 0);
 	type rf_type is array(0 to 7) of std_logic_vector(N-1 downto 0);
 	signal t_rf_mem:rf_type;
   	signal t_z,t_n,t_o:std_logic;
@@ -112,7 +112,7 @@ begin
 			wait_for(2);
 			wait for 1 ps;
 			assert(Dout=t_rf_mem(rd_Reg)) report "I_ST: Dout has the wrong value" severity failure;
-			assert(t_uPC="10") report "I_ST: Dout is set in the wrong clock cycle" severity failure;
+			assert(t_uPC="010") report "I_ST: Dout is set in the wrong clock cycle" severity failure;
 			wait_for(2); -- skip PC+1
 			wait for 1 ps;
 			assert(Address=t_rf_mem(wr_reg)) report "I_ST: Address has the wrong value" severity failure;
@@ -125,7 +125,7 @@ begin
 			wait_for(2); 
 			wait for 2 ns;
 			assert(Address=t_rf_mem(wr_Reg)) report "I_LD: Address has the wrong value" severity failure;
-			assert(t_uPC="10") report "I_LD: Address is set in the wrong clock cycle" severity failure;
+			assert(t_uPC="010") report "I_LD: Address is set in the wrong clock cycle" severity failure;
 			assert(rden='1') report "I_LD: RW has the wrong value" severity failure;
 			wait_for(1);
 			Instr<="1010101010101010"; -- fake memory response
@@ -137,9 +137,10 @@ begin
 	begin
 		wait until reset='1';
 		wait until reset='0';
-		assert(t_uPC="00") report "Reset does not work" severity failure;
+		assert(t_uPC="100") report "Reset does not work" severity failure;
 		assert(address="0000000000000000") report "Memory Address reset does not work" severity failure;
 		assert(false) report "test_reset OK" severity note;
+		wait_for(5);
 		i(Din,I_LDI,R0,"000000001");
 		assert(t_rf_mem(0)="000000000000001") report "I_LDI does not work" severity failure;
 		assert(address="0000000000000001") report "R7 - PC Address increment does not work";
